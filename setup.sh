@@ -1,0 +1,60 @@
+#!/bin/bash
+
+export ARG_GG_VERSION=2.13.0
+
+USER_NME=$1
+
+echo $USER_NME
+
+# Install python libraries pip
+apt-get install python3-pip -y
+pip3 install pyyaml
+
+source gen_config.sh
+
+# Update the ThingName in the config.yaml file
+# python3 update_config.py $DEVICE_NAME
+
+exit
+
+# Make GG root directory
+sudo mkdir -p /greengrass/v2
+sudo chmod 755 /greengrass
+ 
+# Copy claim certs to GG root directory
+sudo cp -r /home/$USER_NME/claim-certs /greengrass/v2/claim-certs
+ 
+# Download Amazon RootCA to GG root directory
+sudo curl -o /greengrass/v2/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
+ 
+# Install dependencies
+sudo apt install -y default-jdk unzip curl
+ 
+# Create user and group
+sudo useradd --system --create-home ggc_user
+sudo groupadd --system ggc_group
+ 
+ 
+# Download and unzip greengrass installer
+curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/greengrass-$ARG_GG_VERSION.zip > greengrass-nucleus-latest.zip
+unzip greengrass-nucleus-latest.zip -d GreengrassInstaller && rm greengrass-nucleus-latest.zip
+ 
+# Download fleet provisioning plugin
+curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/aws-greengrass-FleetProvisioningByClaim/fleetprovisioningbyclaim-latest.jar > GreengrassInstaller/aws.greengrass.FleetProvisioningByClaim.jar
+
+# Echo Greengrass installer version
+# java -jar ./GreengrassInstaller/lib/Greengrass.jar --version
+
+source gen_config.sh
+
+# # Copy config file
+sudo cp ./config.yaml ./GreengrassInstaller/config.yaml
+ 
+# # # Run installer
+sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
+  -jar ./GreengrassInstaller/lib/Greengrass.jar \
+  --trusted-plugin ./GreengrassInstaller/aws.greengrass.FleetProvisioningByClaim.jar \
+  --init-config ./GreengrassInstaller/config.yaml \
+  --component-default-user ggc_user:ggc_group \
+  --setup-system-service true
+ 
