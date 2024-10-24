@@ -6,9 +6,6 @@ USER_NME=$1
 
 echo $USER_NME
 
-# sudo chmod +x gen_id.sh
-# source gen_id.sh
-
 gen_id()
 {
   # Get the hostname
@@ -67,3 +64,5 @@ sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
   --component-default-user ggc_user:ggc_group \
   --setup-system-service true
  
+# Delete GreengrassInstaller
+ sudo rm -rf /home/$USER_NME/GreengrassInstaller/
