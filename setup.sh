@@ -6,12 +6,27 @@ USER_NME=$1
 
 echo $USER_NME
 
-sudo chmod +x gen_id.sh
-source gen_id.sh
+# sudo chmod +x gen_id.sh
+# source gen_id.sh
+
+gen_id()
+{
+  # Get the hostname
+  HOSTNAME=$(hostname)
+ 
+  # Generate a DUID (using the MAC address)
+  DUID=$(cat /etc/machine-id)  # Alternatively, you can use MAC address: `ip link | awk '/ether/{print $2}'`
+ 
+  # Combine hostname and DUID to create a unique device name
+  DEVICE_NAME="${HOSTNAME}-${DUID}"  
+}
+
+gen_id
 
 # Update the config file
 # Update ThingName
 sed -i 's|"ThingName": "[^"]*"|"ThingName": "'"$DEVICE_NAME"'"|' config.json
+sed -i 's|"version": "[^"]*"|"version": "'"$ARG_GG_VERSION"'"|' config.json
 
 # Make GG root directory
 sudo mkdir -p /greengrass/v2
@@ -41,10 +56,10 @@ curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/aws-greengrass-FleetProvi
 # Echo Greengrass installer version
 java -jar ./GreengrassInstaller/lib/Greengrass.jar --version
 
-# # Copy config file
+# Copy config file
 sudo cp ./config.json ./GreengrassInstaller/config.json
  
-# # # Run installer
+# Run installer
 sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
   -jar ./GreengrassInstaller/lib/Greengrass.jar \
   --trusted-plugin ./GreengrassInstaller/aws.greengrass.FleetProvisioningByClaim.jar \
