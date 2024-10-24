@@ -6,16 +6,12 @@ USER_NME=$1
 
 echo $USER_NME
 
-# Install python libraries pip
-apt-get install python3-pip -y
-pip3 install pyyaml
+sudo chmod +x gen_id.sh
+source gen_id.sh
 
-source gen_config.sh
-
-# Update the ThingName in the config.yaml file
-# python3 update_config.py $DEVICE_NAME
-
-exit
+# Update the config file
+# Update ThingName
+sed -i 's|"ThingName": "[^"]*"|"ThingName": "'"$DEVICE_NAME"'"|' config.json
 
 # Make GG root directory
 sudo mkdir -p /greengrass/v2
@@ -43,18 +39,16 @@ unzip greengrass-nucleus-latest.zip -d GreengrassInstaller && rm greengrass-nucl
 curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/aws-greengrass-FleetProvisioningByClaim/fleetprovisioningbyclaim-latest.jar > GreengrassInstaller/aws.greengrass.FleetProvisioningByClaim.jar
 
 # Echo Greengrass installer version
-# java -jar ./GreengrassInstaller/lib/Greengrass.jar --version
-
-source gen_config.sh
+java -jar ./GreengrassInstaller/lib/Greengrass.jar --version
 
 # # Copy config file
-sudo cp ./config.yaml ./GreengrassInstaller/config.yaml
+sudo cp ./config.json ./GreengrassInstaller/config.json
  
 # # # Run installer
 sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
   -jar ./GreengrassInstaller/lib/Greengrass.jar \
   --trusted-plugin ./GreengrassInstaller/aws.greengrass.FleetProvisioningByClaim.jar \
-  --init-config ./GreengrassInstaller/config.yaml \
+  --init-config ./GreengrassInstaller/config.json \
   --component-default-user ggc_user:ggc_group \
   --setup-system-service true
  

@@ -3,7 +3,7 @@
 # Source the configuration file
 # LOAD_CONFIG_FILE="./load_config.sh"
 # CONFIG_FILE_PATH="/opt/greengrass/v2/config/config.yaml"
-CONFIG_YAML_FILE="/config.yaml"
+CONFIG_YAML_FILE="/config2.yaml"
 source $LOAD_CONFIG_FILE
 
 source gen_id.sh
@@ -20,7 +20,7 @@ sed -i "s/iotRoleAlias: .*/iotRoleAlias: \"${ROLE_ALIAS_NAME}\"/g" $CONFIG_YAML_
 
 
     version: 2.13.0
-    
+
 # Echo Greengrass installer version
 # java -jar ./GreengrassInstaller/lib/Greengrass.jar --version
 
