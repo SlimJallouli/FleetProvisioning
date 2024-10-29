@@ -32,7 +32,7 @@ sudo mkdir -p /greengrass/v2
 sudo chmod 755 /greengrass
  
 # Copy claim certs to GG root directory
-sudo cp -r /home/$USER_NME/claim-certs /greengrass/v2/claim-certs
+sudo cp -r ./claim-certs /greengrass/v2/claim-certs
  
 # Download Amazon RootCA to GG root directory
 sudo curl -o /greengrass/v2/AmazonRootCA1.pem https://www.amazontrust.com/repository/AmazonRootCA1.pem
