@@ -1,8 +1,31 @@
 #!/bin/bash
 
 # Define the CloudFormation stack name
-STACK_NAME="GGWorkshopFleetProvisioning"
+# Define the YAML file
 TEMPLATE_FILE="template.yaml"
+
+# Function to display help
+usage() {
+    echo "Usage: $0 -s STACK_NAME"
+    exit 1
+}
+
+# Parse command line arguments
+while getopts ":s:" opt; do
+    case ${opt} in
+        s )
+            STACK_NAME=$OPTARG
+            ;;
+        \? )
+            usage
+            ;;
+    esac
+done
+
+# Check that the stack name argument is provided
+if [ -z "$STACK_NAME" ]; then
+    usage
+fi
 
 # Define output file paths
 CERT_DIR="claim-certs"
