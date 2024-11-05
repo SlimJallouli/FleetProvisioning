@@ -65,11 +65,6 @@ Once the stack status is `CREATE_COMPLETE`, you can proceed.
 Claim certificates allow devices to register as AWS IoT Things and retrieve unique device certificates.
 
 #### a) Create and Save a Certificate and Private Key for Provisioning
-Navigate into the claim-certs folder:
-
-```bash
-cd ./claim-certs
-```
 
 Run the following command to create and save a certificate and private key:
 
