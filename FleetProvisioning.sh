@@ -32,7 +32,6 @@ CERT_DIR="claim-certs"
 CERT_PEM_OUTFILE="$CERT_DIR/claim.pem.crt"
 PUBLIC_KEY_OUTFILE="$CERT_DIR/claim.public.pem.key"
 PRIVATE_KEY_OUTFILE="$CERT_DIR/claim.private.pem.key"
-POLICY_NAME="GGWorkshopProvisioningClaimPolicy"
 
 # Create the CloudFormation stack
 echo "Creating CloudFormation stack: $STACK_NAME..."
@@ -69,6 +68,15 @@ if [ -z "$CERT_ARN" ]; then
     exit 1
 else
     echo "Certificate created successfully with ARN: $CERT_ARN"
+fi
+
+# Extract the default values for ProvisioningTemplateName and GGTokenExchangeRoleName from template.yaml
+POLICY_NAME=$(grep -A 2 "GGProvisioningClaimPolicyName:" $TEMPLATE_FILE | grep "Default:" | awk '{print $2}' | tr -d "'")
+
+# Check if values were found
+if [ -z "$POLICY_NAME" ]; then
+    echo "Failed to extract Policy Name from $TEMPLATE_FILE."
+    exit 1
 fi
 
 # Step 2: Attach the IoT policy to the claim certificate
