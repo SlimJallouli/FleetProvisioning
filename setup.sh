@@ -4,6 +4,10 @@ export ARG_GG_VERSION=2.13.0
 export USER_NME=$USER
 export GG_INSTALLER_PATH="/home/$USER_NME/GreengrassInstaller"
 
+
+GG_FLEET_PLUGIN_VERSION=1.2.1
+
+
 export RED='\033[0;31m'
 export GREEN='\033[0;32m'
 export YELLOW='\033[1;33m'
@@ -97,7 +101,8 @@ unzip greengrass-nucleus-latest.zip -d $GG_INSTALLER_PATH && rm greengrass-nucle
 
 echo -e "${GREEN}Download fleet provisioning plugin${NOCOLOR}"
 # Download fleet provisioning plugin
-curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/aws-greengrass-FleetProvisioningByClaim/fleetprovisioningbyclaim-latest.jar > $GG_INSTALLER_PATH/aws.greengrass.FleetProvisioningByClaim.jar
+# curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/aws-greengrass-FleetProvisioningByClaim/fleetprovisioningbyclaim-latest.jar > $GG_INSTALLER_PATH/aws.greengrass.FleetProvisioningByClaim.jar
+curl -s https://d2s8p88vqu9w66.cloudfront.net/releases/aws-greengrass-FleetProvisioningByClaim/fleetprovisioningbyclaim-$GG_FLEET_PLUGIN_VERSION.jar > $GG_INSTALLER_PATH/aws.greengrass.FleetProvisioningByClaim.jar
 
 # Copy config file
 cp ./config.json $GG_INSTALLER_PATH/config.json
@@ -112,4 +117,4 @@ sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
   --setup-system-service true
  
 # Delete GreengrassInstaller
-rm -rf $GG_INSTALLER_PATH/
+# rm -rf $GG_INSTALLER_PATH/

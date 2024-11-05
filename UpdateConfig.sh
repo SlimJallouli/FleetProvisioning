@@ -40,6 +40,19 @@ echo "Thing Group Name: $THING_GROUP_NAME"
 echo "AWS Region: $AWS_REGION"
 echo "CloudFormation Template File: $TEMPLATE_FILE"
 
+# Check if the thing group was created
+GROUP_EXISTS=$(aws iot list-thing-groups --query "thingGroups[?thingGroupName=='$THING_GROUP_NAME'] | length(@)")
+
+if [ "$GROUP_EXISTS" -gt 0 ]; then
+    echo "Thing group '$THING_GROUP_NAME' found."
+else
+    echo "Create a Thing Group '$THING_GROUP_NAME'."
+    # Create a Thing Group
+    THING_GROUP_ARN=$(aws iot describe-thing-group --thing-group-name "$THING_GROUP_NAME" --query "thingGroupArn" --output text)
+fi
+
+
+ 
 # Get the IoT Credential Endpoint
 IOT_CREDENTIAL_ENDPOINT=$(aws iot describe-endpoint --endpoint-type iot:CredentialProvider --query 'endpointAddress' --output text)
 

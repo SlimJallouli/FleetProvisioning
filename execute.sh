@@ -5,14 +5,14 @@ TEMPLATE_FILE="template.yaml"
 
 # Function to display help
 usage() {
-    echo "Usage: $0 -ip REMOTE_IP_ADDRESS"
+    echo "Usage: $0 -i REMOTE_IP_ADDRESS"
     exit 1
 }
 
 # Parse command line arguments
-while getopts ":ip:" opt; do
+while getopts ":i:" opt; do
     case ${opt} in
-        ip )
+        i )
             REMOTE_IP_ADDRESS=$OPTARG
             ;;
         \? )
