@@ -1,70 +1,71 @@
+
 # Fleet Provisioning for AWS IoT Greengrass
 
 ## Overview
-This project helps you set up AWS IoT Fleet Provisioning for GreengrassV2 using AWS CloudFormation, claim certificates, and an IoT provisioning template. The provided template.yaml will create the necessary roles, policies, and templates for provisioning.
+This project provides a setup for AWS IoT Fleet Provisioning with GreengrassV2 using AWS CloudFormation, claim certificates, and an IoT provisioning template. This enables scalable, secure, and automated provisioning of IoT devices, allowing them to self-register with minimal intervention and maintain secure communication through AWS IoT.
 
 ## Prerequisites
 - **[STM32MP1DK](https://www.st.com/en/evaluation-tools/stm32mp135f-dk.html)**: The device must be set up and [accessible over the network](https://wiki.st.com/stm32mpu/wiki/How_to_setup_a_WLAN_connection).
 - **[X-LINUX-AWS](https://wiki.st.com/stm32mpu/wiki/X-LINUX-AWS_Starter_package)**: Ensure that X-LINUX-AWS is installed on the STM32MP1DK.
-- **AWS Account**: Access to an AWS account with permissions to manage IAM, IoT, Greengrass, and create Cloudformation Stacks.
-- [**AWS CLI**](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html): Ensure the AWS CLI is installed and [configured](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-quickstart.html) on your local machine.
-- [**Git Bash**](https://git-scm.com/downloads): Required for windows users as it provides a Unix-like shell that ensures compatibility with the Linux-style commands used in the scripts.
+- **AWS Account**: Access to an AWS account with permissions to manage IAM, IoT, Greengrass, and create CloudFormation Stacks.
+- **[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)**: Install and [configure](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-quickstart.html) the AWS CLI on your local machine.
+- **[Git Bash](https://git-scm.com/downloads)**: Required for Windows users, as it provides a Unix-like shell compatible with the scripts used.
 - **SSH Access**: Ensure you can SSH into the STM32MP135 DK.
 
 ## Files
 
 1. **setup.sh**
-   - Installs and configures AWS IoT Greengrass V2 with Fleet Provisioning.
+   - Configures AWS IoT Greengrass V2 with Fleet Provisioning.
    - Generates a unique device name using the hostname and machine ID.
    - Downloads and installs necessary dependencies.
    - Copies claim certificates, installs Greengrass, and configures the system service.
 
 2. **uninstall_greengrass.sh**
    - Stops the Greengrass service.
-   - Removes the Greengrass installation and configuration files from the system.
+   - Removes Greengrass installation and configuration files from the system.
 
 3. **config.json**
    - Configuration file for AWS IoT Greengrass and Fleet Provisioning.
    - Sets parameters such as AWS region, claim certificate paths, IoT credential and data endpoints, role alias, and provisioning template.
 
 4. **template.yaml**
-    - Cloudformation template for configuing Greengrass Fleet Provisioning resources
+   - CloudFormation template for configuring Greengrass Fleet Provisioning resources.
 
 5. **IotConfig_Cleanup.sh**
-    - Cleanup that will delete an IoT Thing, its attached certificates and policies, its Thing Group, and its Greengrass V2 core device.
+   - Cleans up IoT resources by deleting an IoT Thing, its certificates, policies, Thing Group, and Greengrass V2 core device.
 
-## Steps
+---
+
+## Setup Steps
 
 ### 1. Clone this Repository
-
-On a PC with AWS CLI installed clone this repository:
+On a PC with AWS CLI installed, clone this repository:
 
 ```bash
 git clone https://github.com/stm32-hotspot/FleetProvisioning
 cd FleetProvisioning
-
 ```
 
 ### 2. Create the CloudFormation Stack
-Use AWS CLI and the AWS Account with the required privileges to create the CloudFormation Stack
+Use AWS CLI with the required privileges to create the CloudFormation Stack:
 
 ```bash
 aws cloudformation create-stack --stack-name GGWorkshopFleetProvisioning --template-body file://template.yaml --capabilities CAPABILITY_NAMED_IAM
 ```
 
-Wait a few minutes for the resources to be created. You can check the status from the CloudFormation console or with this command:
+Wait for a few minutes until the resources are created. Check the status from the CloudFormation console or use the command:
 
 ```bash
 aws cloudformation describe-stacks --stack-name GGWorkshopFleetProvisioning
 ```
 
-Once the stack status is CREATE_COMPLETE, you can proceed to the next section.
+Once the stack status is `CREATE_COMPLETE`, you can proceed.
 
 ### 3. Generate Claim Certificates
-Claim certificates are X.509 certificates that allow devices to register as AWS IoT things and retrieve a unique X.509 device certificate for regular operations. After creating a claim certificate, attach an AWS IoT policy that permits devices to create unique device certificates and provision them using a fleet provisioning template.
+Claim certificates allow devices to register as AWS IoT Things and retrieve unique device certificates.
 
-#### a) Create and save a certificate and private key for provisioning
-Navigate into the claim-certs folder
+#### a) Create and Save a Certificate and Private Key for Provisioning
+Navigate into the claim-certs folder:
 
 ```bash
 cd ./claim-certs
@@ -73,49 +74,48 @@ cd ./claim-certs
 Run the following command to create and save a certificate and private key:
 
 ```bash
-aws iot create-keys-and-certificate \
-  --certificate-pem-outfile "claim-certs/claim.pem.crt" \
-  --public-key-outfile "claim-certs/claim.public.pem.key" \
-  --private-key-outfile "claim-certs/claim.private.pem.key" \
-  --set-as-active \
-  --query 'certificateArn' \
-  --output text
+aws iot create-keys-and-certificate   --certificate-pem-outfile "claim-certs/claim.pem.crt"   --public-key-outfile "claim-certs/claim.public.pem.key"   --private-key-outfile "claim-certs/claim.private.pem.key"   --set-as-active   --query 'certificateArn'   --output text
 ```
 
-Take note of the certificate ARN because it will be needed in the next step.
+Take note of the `<certificateArn>` output, as it will be needed in the next step.
 
 #### b) Attach the IoT Policy to the Provisioning Claim Certificate
-Attach the IoT policy created with CloudFormation (GGWorkshopProvisioningClaimPolicy) to the claim certificate:
+Attach the IoT policy created by CloudFormation (GGWorkshopProvisioningClaimPolicy) to the claim certificate:
 
 ```bash
-aws iot attach-policy --policy-name <GGWorkshopProvisioningClaimPolicy> --target <certificateArn>
+aws iot attach-policy --policy-name GGWorkshopProvisioningClaimPolicy --target <certificateArn>
 ```
 
-Replace <certificateArn> with the ARN from the previous step.
+Replace `<certificateArn>` with the ARN obtained from the previous step.
 
+### 4. Collect AWS Data and Credential Endpoints
+Note the outputs of the following commands, as they will be needed in the next step.
 
-### 4. Collect AWS Data and Credential Endoints
-
-Note the output of the following commands as it will be needed for the next step
-
+**Credential Endpoint:**
 ```bash
 aws iot describe-endpoint --endpoint-type iot:CredentialProvider
 ```
+
+**Data Endpoint:**
 ```bash
 aws iot describe-endpoint --endpoint-type iot:Data-ATS
 ```
 
 ### 5. Update the Config
 
-Update the following Configuration parameters:
- - awsRegion: Select the nearest AWS Region to you that supports GreengrassV2
- - iotCredentialEndpoint: Use the credential endoint collected in the previous step
- - iotDataEndpoint: Use the data endpoint collected in the previous step
- - iotRoleAlias: Use the Rolea Alias specified in the CloudFormation template.yaml file
- - provisioningTemplate: Use the Provisioning Template name specified in the CloudFormation template.yaml file
- - ThingGroupName: Select the name of an existing thing group. If you dont have one use the following command
- 
-    ```aws iot create-thing-group --thing-group-name <THING_GROUP_NAME>```
+Edit the `config.json` file with the following parameters:
+   - `awsRegion`: Select a Greengrass-supported AWS Region nearest to you.
+   - `iotCredentialEndpoint`: Use the credential endpoint obtained in the previous step.
+   - `iotDataEndpoint`: Use the data endpoint obtained in the previous step.
+   - `iotRoleAlias`: Use the Role Alias specified in the CloudFormation `template.yaml`.
+   - `provisioningTemplate`: Use the Provisioning Template name specified in `template.yaml`.
+   - `ThingGroupName`: Specify the name of an existing Thing Group. If you don’t have one, create it with:
+
+      ```bash
+      aws iot create-thing-group --thing-group-name <THING_GROUP_NAME>
+      ```
+
+Example configuration:
 
 ```json
 {
@@ -143,14 +143,14 @@ Update the following Configuration parameters:
   }
 }
 ```
-```
-NOTE: "ThingName" and "version" will be be automatically populated during setup.sh script exectuion. 
-```
-### 6. Copy Entire Reporository to STM32MP135-DK
-These scripts will be run on the STM32MP1 so replace <Board.IP.ADDRESS> with the IP address of your discovery kit and copy the repository over using the following comand
+
+> **Note:** `ThingName` and `version` will be automatically populated during the execution of `setup.sh`.
+
+### 6. Copy Entire Repository to STM32MP135-DK
+Replace `<Board.IP.ADDRESS>` with your board's IP address and copy the repository:
 
 ```bash
-scp ./* root@<Board.IP.ADDRESS>:~
+scp -r ./* root@<Board.IP.ADDRESS>:~
 ```
 
 ### 7. SSH to the STM32MP135-DK
@@ -160,13 +160,13 @@ ssh root@<Board.IP.ADDRESS>
 ```
 
 ### 8. Running `setup.sh`
+The `setup.sh` script will:
+   - Generate a unique device name and update `config.json` with it.
+   - Update the Greengrass Nucleus version.
+   - Install AWS IoT Greengrass V2.
+   - Configure Fleet Provisioning using `config.json`.
 
-This script will:
-
-- Generate a unique device name and update `config.json` with it.
-- Update the Greengrass Nucleus Version
-- Install AWS IoT Greengrass V2.
-- Configure Fleet Provisioning using the parameters in `config.json`.
+Run:
 
 ```bash
 cd ~
@@ -174,11 +174,29 @@ chmod +x setup.sh
 ./setup.sh $USER
 ```
 
-### 9. (OPTIONAL) Running `uninstall_greengrass.sh`
+### 9. Verify Greengrass Core Device Status
+To confirm that your device has been successfully set up and registered as a Greengrass core device, use:
 
-To uninstall AWS IoT Greengrass and remove the related configuration:
+```bash
+aws greengrassv2 list-core-devices --status HEALTHY
+```
+
+### 10. (Optional) Running `uninstall_greengrass.sh`
+To remove AWS IoT Greengrass and its configuration files from your device:
 
 ```bash
 chmod +x uninstall_greengrass.sh
 ./uninstall_greengrass.sh $USER
 ```
+
+---
+
+### Troubleshooting
+If you encounter issues, check the following:
+   - **Network Connectivity**: Ensure the device can access AWS IoT endpoints.
+   - **IAM Permissions**: Verify your AWS account has the required permissions for IoT, Greengrass, and CloudFormation.
+   - **Certificate and Policy Issues**: Ensure the claim certificate and attached policies are correctly set up.
+
+---
+
+This README should help you set up Fleet Provisioning with AWS IoT Greengrass on your STM32MP1 device efficiently. Let me know if you'd like any further customization!
