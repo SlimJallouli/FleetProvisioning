@@ -156,7 +156,7 @@ scp ./* root@<Board.IP.ADDRESS>:~
 ### 7. SSH to the STM32MP135-DK
 
 ```bash
-ssh root@ <Board.IP.ADDRESS>
+ssh root@<Board.IP.ADDRESS>
 ```
 
 ### 8. Running `setup.sh`
@@ -174,15 +174,11 @@ chmod +x setup.sh
 ./setup.sh $USER
 ```
 
-Replace `<username>` with your system username.
-
 ### 9. (OPTIONAL) Running `uninstall_greengrass.sh`
 
 To uninstall AWS IoT Greengrass and remove the related configuration:
 
 ```bash
 chmod +x uninstall_greengrass.sh
-./uninstall_greengrass.sh <username>
+./uninstall_greengrass.sh $USER
 ```
-
-Replace `<username>` with your system username.
