@@ -5,12 +5,12 @@
 This project provides an automated setup for AWS IoT Fleet Provisioning with Greengrass V2 on STM32MP1/STM32MP2 devices. By using CloudFormation, claim certificates, and an IoT provisioning template, this project enables scalable, secure, and automated provisioning of IoT devices, allowing them to self-register and maintain secure communication through AWS IoT.
 
 ## Prerequisites
-- **[STM32MP1DK](https://www.st.com/en/evaluation-tools/stm32mp135f-dk.html)**: The device must be set up and [accessible over the network](https://wiki.st.com/stm32mpu/wiki/How_to_setup_a_WLAN_connection).
-- **[X-LINUX-AWS](https://wiki.st.com/stm32mpu/wiki/X-LINUX-AWS_Starter_package)**: Ensure that X-LINUX-AWS is installed on the STM32MP1DK.
+- **[STM32MP135F-DK](https://www.st.com/en/evaluation-tools/stm32mp135f-dk.html) or [STM32MP257F-DK](https://www.st.com/en/evaluation-tools/stm32mp257f-dk.html)** : The device must be set up and [accessible over the network](https://wiki.st.com/stm32mpu/wiki/How_to_setup_a_WLAN_connection).
+- **[X-LINUX-AWS](https://wiki.st.com/stm32mpu/wiki/X-LINUX-AWS_Starter_package)**: Ensure that X-LINUX-AWS is installed on the STM32MP1/MP2.
 - **AWS Account**: Access to an AWS account with permissions to manage IAM, IoT, Greengrass, and CloudFormation stacks.
 - **[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)**: Install and [configure](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-quickstart.html) the AWS CLI on your local machine.
 - **[Git Bash](https://git-scm.com/downloads)**: Required for Windows users to provide a Unix-like shell compatible with the scripts.
-- **SSH Access**: Ensure SSH access to the STM32MP135 DK.
+- **SSH Access**: Ensure SSH access to the STM32MP1/MP2.
 
 ## Files
 
@@ -21,7 +21,7 @@ This project provides an automated setup for AWS IoT Fleet Provisioning with Gre
    - Parses `template.yaml` and uses AWS CLI to collect and create required fields, automatically populating `config.json`.
 
 3. **execute.sh**
-   - Copies necessary files to the STM32MP1 device and runs `setup.sh` remotely.
+   - Copies necessary files to the STM32MP1/MP2 device and runs `setup.sh` remotely.
 
 4. **setup.sh**
    - Configures AWS IoT Greengrass V2 with Fleet Provisioning, generates a unique device name, installs dependencies, and sets up the Greengrass core device.
@@ -78,8 +78,8 @@ The `execute.sh` script will handle file transfer and initiate setup on the boar
 ./execute.sh -i <Board.IP.ADDRESS>
 ```
 
-Replace `<Board.IP.ADDRESS>` with your STM32MP1 device’s IP. This step:
-   - Copies all necessary files to the STM32MP1.
+Replace `<Board.IP.ADDRESS>` with your STM32MP1/MP2 device’s IP. This step:
+   - Copies all necessary files to the STM32MP1/MP2.
    - SSHs into the board and runs `setup.sh`.
 
 ### 5. Verify Greengrass Core Device Status
