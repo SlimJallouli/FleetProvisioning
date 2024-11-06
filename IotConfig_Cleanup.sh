@@ -2,18 +2,15 @@
 
 # Function to display help
 usage() {
-    echo "Usage: $0 -t THING_NAME -g THING_GROUP_NAME"
+    echo "Usage: $0 -t THING_NAME"
     exit 1
 }
 
 # Parse command line arguments
-while getopts ":t:g:" opt; do
+while getopts ":t:" opt; do
     case ${opt} in
         t )
             THING_NAME=$OPTARG
-            ;;
-        g )
-            THING_GROUP_NAME=$OPTARG
             ;;
         \? )
             usage
@@ -22,7 +19,7 @@ while getopts ":t:g:" opt; do
 done
 
 # Check that both arguments are provided
-if [ -z "$THING_NAME" ] || [ -z "$THING_GROUP_NAME" ]; then
+if [ -z "$THING_NAME" ]; then
     usage
 fi
 
@@ -44,14 +41,6 @@ else
             POLICY_NAME=$(basename "${POLICY_ARN}")
             echo "Detaching policy: ${POLICY_NAME} from certificate: ${CERT_ARN}"
             aws iot detach-policy --policy-name "${POLICY_NAME}" --target "${CERT_ARN}"
-
-            # Check if the policy exists before trying to delete it
-            if aws iot get-policy --policy-name "${POLICY_NAME}" > /dev/null 2>&1; then
-                echo "Deleting policy: ${POLICY_NAME}"
-                aws iot delete-policy --policy-name "${POLICY_NAME}"
-            else
-                echo "Policy ${POLICY_NAME} does not exist, skipping deletion."
-            fi
         done
 
         # Extract the certificate ID from the ARN
@@ -78,11 +67,6 @@ fi
 # Delete the IoT Thing
 echo "Deleting IoT Thing: ${THING_NAME}"
 aws iot delete-thing --thing-name "${THING_NAME}"
-
-
-echo "Deleting Thing Group '$THING_GROUP_NAME'"
-aws iot delete-thing-group --thing-group-name "$THING_GROUP_NAME"
-echo "Deleted Thing Group: $THING_GROUP_NAME"
 
 echo "Deleting GreenGrass core V2 '$THING_NAME'"
 aws greengrassv2 delete-core-device --core-device-thing-name ${THING_NAME}

@@ -73,6 +73,8 @@ fi
 # Extract the default values for ProvisioningTemplateName and GGTokenExchangeRoleName from template.yaml
 POLICY_NAME=$(grep -A 2 "GGProvisioningClaimPolicyName:" $TEMPLATE_FILE | grep "Default:" | awk '{print $2}' | tr -d "'")
 
+echo "POLICY_NAME : "$POLICY_NAME
+
 # Check if values were found
 if [ -z "$POLICY_NAME" ]; then
     echo "Failed to extract Policy Name from $TEMPLATE_FILE."
