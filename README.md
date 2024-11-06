@@ -1,8 +1,8 @@
 
-# Fleet Provisioning for AWS IoT Greengrass
+# Fleet Provisioning for AWS IoT Greengrass on STM32MP1 and STM32MP2
 
 ## Overview
-This project provides a setup for AWS IoT Fleet Provisioning with GreengrassV2 using AWS CloudFormation, claim certificates, and an IoT provisioning template. This enables scalable, secure, and automated provisioning of IoT devices, allowing them to self-register with minimal intervention and maintain secure communication through AWS IoT.
+This project provides a setup for AWS IoT Fleet Provisioning with GreengrassV2 on STM32MP1/STM32MP2 using AWS CloudFormation, claim certificates, and an IoT provisioning template. This enables scalable, secure, and automated provisioning of IoT devices, allowing them to self-register with minimal intervention and maintain secure communication through AWS IoT.
 
 ## Prerequisites
 - **[STM32MP1DK](https://www.st.com/en/evaluation-tools/stm32mp135f-dk.html)**: The device must be set up and [accessible over the network](https://wiki.st.com/stm32mpu/wiki/How_to_setup_a_WLAN_connection).
