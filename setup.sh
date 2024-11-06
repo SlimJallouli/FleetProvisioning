@@ -132,4 +132,7 @@ sudo -E java -Droot="/greengrass/v2" -Dlog.store=FILE \
   --setup-system-service true
  
 # Delete GreengrassInstaller
-# rm -rf $GG_INSTALLER_PATH/
+rm -rf $GG_INSTALLER_PATH/
+
+# Delete Claim Certificates
+rm -rf ./claim-certs
