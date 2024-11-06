@@ -57,7 +57,7 @@ Use `createFleetProvisioningStack.sh` to automte the setup of AWS IoT Fleet Prov
 ```bash
 ./createFleetProvisioningStack.sh -s <STACK_NAME>
 ```
-
+> Note: AWS CloudFormation Stack template can be modified in `template.yaml` 
 ### 3. Generate Required Configuration
 Run `updateConfig.sh` to parse `template.yaml` and populate `config.json` with required AWS endpoint and configuration data:
 
@@ -71,7 +71,7 @@ Replace `<THING_GROUP_NAME>` with the desired name for your Thing Group. This st
    - IoT Credential and Data endpoints
    - Role Alias and Provisioning Template values from `template.yaml`
 
-### 4. Copy Files to STM32MP1 Device
+### 4. Install Greengrass and Provision STM32MP1/MP2
 The `execute.sh` script will handle file transfer and initiate setup on the board:
 
 ```bash
