@@ -75,8 +75,8 @@ echo "Data Endpoint: $IOT_DATA_ENDPOINT"
 
 
 # Extract the default values for ProvisioningTemplateName and GGTokenExchangeRoleName from template.yaml
-provisioningTemplate=$(grep -A 2 "ProvisioningTemplateName:" template.yaml | grep "Default:" | awk '{print $2}' | tr -d "'")
-iotRoleAlias=$(grep -A 2 "GGTokenExchangeRoleName:" template.yaml | grep "Default:" | awk '{print $2}' | tr -d "'")
+provisioningTemplate=$(grep -A 2 "ProvisioningTemplateName:" $TEMPLATE_FILE | grep "Default:" | awk '{print $2}' | tr -d "'")
+iotRoleAlias=$(grep -A 2 "GGTokenExchangeRoleName:" $TEMPLATE_FILE | grep "Default:" | awk '{print $2}' | tr -d "'")
 
 # Check if values were found
 if [ -z "$iotRoleAlias" ] || [ -z "$provisioningTemplate" ]; then
