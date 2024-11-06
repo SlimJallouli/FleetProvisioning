@@ -2,23 +2,23 @@
     "services": {
       "aws.greengrass.FleetProvisioningByClaim": {
         "configuration": {
-          "awsRegion": "us-west-2",
+          "awsRegion": "",
           "claimCertificatePath": "/greengrass/v2/claim-certs/claim.pem.crt",
           "claimCertificatePrivateKeyPath": "/greengrass/v2/claim-certs/claim.private.pem.key",
-          "iotCredentialEndpoint": "c2pkgv9n6fkyqa.credentials.iot.us-west-2.amazonaws.com",
-          "iotDataEndpoint": "a1qwhobjtvew8t-ats.iot.us-west-2.amazonaws.com",
-          "iotRoleAlias": "STR02TokenExchangeRoleAlias",
-          "provisioningTemplate": "STR02FleetProvisionTemplate",
+          "iotCredentialEndpoint": "",
+          "iotDataEndpoint": "",
+          "iotRoleAlias": "",
+          "provisioningTemplate": "",
           "rootCaPath": "/greengrass/v2/AmazonRootCA1.pem",
           "rootPath": "/greengrass/v2",
           "templateParameters": {
-            "ThingGroupName": "st_redmond_02_group",
+            "ThingGroupName": "",
             "ThingName": ""
           }
         }
       },
       "aws.greengrass.Nucleus": {
-        "version": "2.13.0"
+        "version": ""
       }
     }
   }
