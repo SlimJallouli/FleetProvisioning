@@ -4,19 +4,19 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   ProvisioningTemplateName:
     Type: String
-    Default: 'SlimFleetProvisionTemplate' 
+    Default: 'ProvisionTemplate' 
   GGTokenExchangeRoleName:
     Type: String
-    Default: 'SlimTokenExchangeRole'
+    Default: 'TokenExchangeRole'
   GGFleetProvisioningRoleName:
     Type: String
-    Default: 'SlimFleetProvisioningRole'
+    Default: 'ProvisioningRole'
   GGDeviceDefaultPolicyName:
     Type: String
-    Default: 'SlimDeviceDefaultIoTPolicy'
+    Default: 'DeviceDefaultIoTPolicy'
   GGProvisioningClaimPolicyName:
     Type: String
-    Default: 'SlimProvisioningClaimPolicy'
+    Default: 'ProvisioningClaimPolicy'
 
 Resources:
   
