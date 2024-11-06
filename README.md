@@ -82,6 +82,8 @@ Replace `<Board.IP.ADDRESS>` with your STM32MP1/MP2 device’s IP. This step:
    - Copies all necessary files to the STM32MP1/MP2.
    - SSHs into the board and runs `setup.sh`.
 
+> Note: This is the only script that will need to be ran once for every board.
+
 ### 5. Verify Greengrass Core Device Status
 To confirm your device is set up and registered as a Greengrass core device:
 
